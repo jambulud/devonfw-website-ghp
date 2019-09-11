@@ -11,24 +11,15 @@
       href="//fonts.googleapis.com/css?family=Ubuntu"
     />
 
-    <!-- Style for the header/navbar -->
+    <!-- header/navbar -->
     <link
       rel="stylesheet"
       type="text/css"
       href="../../components/header/header.css"
     />
 
-    <!-- Script for the header/navbar -->
-    <script src="../../components/header/header.js"></script>
-
     <!-- Style fort the resources -->
     <link rel="stylesheet" type="text/css" href="docs.css" />
-
-    <!-- Script for the resources -->
-    <script src="docs.js"></script>
-
-    <!-- Script for the docs -->
-    <script src="../../shared/utils.js"></script>
 
     <!-- JQuery -->
     <script
@@ -411,18 +402,24 @@
         </div>
       </div>
     </div>
-    <script>
+    <script type="module">
+      import { HeaderModule } from '../../components/header/header.js';
+      import { ConfigModule } from '../../config/devonfw-site-conf.js';
+      import { UtilsModule } from '../../shared/utils.js';
+      import { DocsModule } from './docs.js';
+
       const DOCS_DEST = '#wiki-content';
       const NAVBAR_DEST = '#website-navbar';
-      const INITAL_PAGE_URL =
-        '../../../devon4ng.wiki/architecture.html #content';
+      const INITAL_PAGE_URL = ConfigModule.pagesLocation.docsPage.initialPage;
       const SIDEBAR_NAME = 'Features';
       let searchData = { index: null, documents: null };
       UtilsModule.loadIndex(searchData);
 
       $(window).on('load', function() {
         let urlParam = UtilsModule.getParametersFromUrl();
-        let loadUrl = urlParam ? `${urlParam} #content` : INITAL_PAGE_URL;
+        let loadUrl = urlParam
+          ? `${urlParam} #content`
+          : `${INITAL_PAGE_URL} #content`;
 
         const queryFun = () => {
           HeaderModule.queryFunction(searchData);
@@ -433,9 +430,7 @@
         });
 
         DocsModule.sidebarEditHref();
-        DocsModule.loadDocs(DOCS_DEST, loadUrl, () => {
-          UtilsModule.editSrc(undefined, '../../../');
-        });
+        DocsModule.loadDocs(DOCS_DEST, loadUrl);
 
         $('ul.sectlevel0 > li > a')
           .first()

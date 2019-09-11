@@ -1,7 +1,11 @@
-(function(window) {
+import { ConfigModule } from '../../config/devonfw-site-conf.js';
+import { UtilsModule } from '../../shared/utils.js';
+
+const docsModule = (function(window) {
   // Function definitions
   function loadDocs(docsDestSelector, pageToLoad, handler = () => {}) {
     $(docsDestSelector).load(pageToLoad, function() {
+      UtilsModule.editSrc();
       handler();
     });
   }
@@ -85,7 +89,7 @@
               .attr('href')
               .replace(
                 /#([a-zA-Z0-9-]+)\.asciidoc$/,
-                `../../../${level0href}/$1.html`,
+                `${ConfigModule.devonfwGuide.path}${level0href}/$1.html`,
               ),
           );
 
@@ -104,10 +108,8 @@
   }
 
   function editSrc(searchValue, replaceValue) {
-    let searchVal =
-      searchValue ||
-      'C:/Proyectos/devonfw-official-website-projects/devonfw-official-website/devonfw-guide/target/generated-docs/';
-    let replaceVal = replaceValue || '../../../';
+    let searchVal = searchValue || ConfigModule.editSrc.searchValue;
+    let replaceVal = replaceValue || ConfigModule.editSrc.imgFolderPath;
 
     $('img').each(function() {
       $(this).attr(
@@ -120,9 +122,11 @@
   }
 
   // List of functions accessibly by other scripts
-  window.DocsModule = {
+  return {
     loadDocs: loadDocs,
     clickSidebar: clickSidebar,
     sidebarEditHref,
   };
 })(window);
+
+export const DocsModule = docsModule;
