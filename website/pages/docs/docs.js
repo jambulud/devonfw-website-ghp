@@ -3,8 +3,8 @@ import { UtilsModule } from '../../shared/utils.js';
 
 const docsModule = (function(window) {
   // Function definitions
-  function loadDocs(docsDestSelector, pageToLoad, handler = () => {}) {
-    $(docsDestSelector).load(pageToLoad, function() {
+  function loadDocs(docsDestSelector, pageToLoadFrom, handler = () => {}) {
+    $(docsDestSelector).load(pageToLoadFrom, function() {
       UtilsModule.editSrc();
       handler();
     });
@@ -21,7 +21,7 @@ const docsModule = (function(window) {
       event.preventDefault();
       loadDocs(pageDest, page, () => {
         toSecondSidebar(clickedItem.find('.sectlevel1:first-child > li'));
-        editSrc();
+        UtilsModule.editSrc();
       });
 
       $('ul.sectlevel0 a').removeClass('active');
@@ -39,7 +39,7 @@ const docsModule = (function(window) {
       event.preventDefault();
       loadDocs(pageDest, page, () => {
         toSecondSidebar(clickedItem);
-        editSrc();
+        UtilsModule.editSrc();
       });
       $('ul.sectlevel0 a').removeClass('active');
       link.addClass('active');
@@ -72,9 +72,11 @@ const docsModule = (function(window) {
       $(this)
         .children('a')
         .each(function() {
-          level0href = $(this)
-            .attr('href')
-            .replace(/#master-([a-zA-Z0-9-]+)\.asciidoc$/, '$1.wiki');
+          const href = $(this).attr('href');
+          const match = href.match(/#([a-zA-Z0-9-]+)\.asciidoc/);
+          const devonDirs = ConfigModule.devonfwGuide.masterDir;
+          const dirName = devonDirs[match ? match[1] : ''];
+          level0href = href.replace(/#([a-zA-Z0-9-]+)\.asciidoc$/, dirName);
         });
 
       let firstPage = '';
@@ -107,25 +109,12 @@ const docsModule = (function(window) {
     });
   }
 
-  function editSrc(searchValue, replaceValue) {
-    let searchVal = searchValue || ConfigModule.editSrc.searchValue;
-    let replaceVal = replaceValue || ConfigModule.editSrc.imgFolderPath;
-
-    $('img').each(function() {
-      $(this).attr(
-        'src',
-        $(this)
-          .attr('src')
-          .replace(searchVal, replaceVal),
-      );
-    });
-  }
-
   // List of functions accessibly by other scripts
   return {
     loadDocs: loadDocs,
+    loadSidebar: loadDocs,
     clickSidebar: clickSidebar,
-    sidebarEditHref,
+    sidebarEditHref: sidebarEditHref,
   };
 })(window);
 
