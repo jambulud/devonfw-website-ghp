@@ -1,6 +1,6 @@
 // Get the configuration for the website
 function configModule() {
-  const BASE_PATH = '/devonfw-website-ghp/';
+  const BASE_PATH = '/devonfw-website-tst/';
 
   const searchInfo = {
     docsPath: `${BASE_PATH}website/docs-json.json`,
@@ -58,8 +58,8 @@ function configModule() {
   };
 
   const editSrc = {
-    searchValue:
-      'C:/Proyectos/devonfw-official-website-projects/devonfw-official-website/devonfw-guide/target/generated-docs/',
+    searchValue: '/home/travis/build/devonfw/devonfw-official-website/devonfw-guide/target/generated-docs/',
+      //'C:/Proyectos/devonfw-official-website-projects/devonfw-official-website/devonfw-guide/target/generated-docs/',
     replaceValue: '../../',
     imgFolderPath: `${BASE_PATH}`,
   };
